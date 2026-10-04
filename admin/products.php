@@ -309,7 +309,7 @@ $cat_result = mysqli_query($conn, "SELECT * FROM categories ORDER BY category_na
     <div class="product-grid">
       <?php while($row = mysqli_fetch_assoc($result)): ?>
       <?php
-        $stock = (int)$row['stock_qty'];
+$stock = (!empty($row['stock'])) ? (int)$row['stock'] : 99;
         if($stock <= 0)      { $sc = 'stock-out'; $st = 'Out of Stock'; }
         elseif($stock <= 10) { $sc = 'stock-low'; $st = 'Low Stock ('.$stock.' left)'; }
         else                 { $sc = 'stock-in';  $st = 'In Stock'; }
