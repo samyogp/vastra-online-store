@@ -3,7 +3,7 @@ session_start();
 include 'config/db.php';
 
 // Fetch featured products from DB
-$result = mysqli_query($conn, "SELECT p.*, c.category_name FROM products p JOIN categories c ON p.category_id = c.category_id LIMIT 6");
+$result = mysqli_query($conn, "SELECT p.*, c.category_name FROM products p JOIN categories c ON p.category_id = c.category_id LIMIT 7");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -353,10 +353,11 @@ $result = mysqli_query($conn, "SELECT p.*, c.category_name FROM products p JOIN 
     <?php while($row = mysqli_fetch_assoc($result)): ?>
     <div class="product-card">
       <div class="product-img">
-       <?php if(!empty($row['image']) && file_exists('images/'.$row['image'])): ?>
-  <img src="images/<?= htmlspecialchars($row['image']) ?>" alt="...">
-          👕
-        <?php endif; ?>
+      <?php if(!empty($row['image']) && file_exists('images/' . $row['image'])): ?>
+  <img src="images/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['product_name']) ?>">
+<?php else: ?>
+  👕
+<?php endif; ?>
         <button class="wish-btn">♡</button>
       </div>
       <div class="product-info">
