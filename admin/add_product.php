@@ -49,8 +49,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if(empty($error)) {
-        $q = "INSERT INTO products (category_id, product_name, description, price, stock_qty, sizes, image)
-              VALUES ($cat_id, '$name', '$description', $price, $stock, '$sizes', '$image')";
+       $q = "INSERT INTO products (category_id, product_name, description, price, sizes, image)
+      VALUES ($cat_id, '$name', '$description', $price, '$sizes', '$image')";
 
         if(mysqli_query($conn, $q)) {
             header("Location: products.php?msg=added");
