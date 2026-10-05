@@ -1,8 +1,6 @@
 <?php
 session_start();
 include '../config/db.php';
-$page_title = 'Edit Product';
-include 'header.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE product_id=$id"));
@@ -19,10 +17,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cat_id = (int)$_POST['category_id'];
     $desc   = mysqli_real_escape_string($conn, trim($_POST['description']));
     $price  = (float)$_POST['price'];
-    $stock  = (int)$_POST['stock_qty'];
-    $image  = $product['image']; // keep old image by default
+    $stock  = (int)$_POST['stock'];
+    $sizes  = mysqli_real_escape_string($conn, trim($_POST['sizes']));
+    $image  = $product['image'];
 
-    // Handle new image upload
     if(!empty($_FILES['image']['name'])) {
         $allowed = ['jpg','jpeg','png','webp'];
         $ext     = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
@@ -42,17 +40,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     product_name='$name',
                     description='$desc',
                     price=$price,
-                    stock_qty=$stock,
+                    stock=$stock,
+                    sizes='$sizes',
                     image='$image'
                 WHERE product_id=$id";
         if(mysqli_query($conn, $sql)) {
             header("Location: products.php?msg=updated");
             exit();
         } else {
-            $error = "Update failed. Please try again.";
+            $error = "Update failed: " . mysqli_error($conn);
         }
     }
 }
+
+$page_title = 'Edit Product';
+include 'header.php';
 
 $categories = mysqli_query($conn, "SELECT * FROM categories ORDER BY category_name");
 ?>
@@ -102,20 +104,26 @@ $categories = mysqli_query($conn, "SELECT * FROM categories ORDER BY category_na
     <div class="form-row">
       <div class="form-group">
         <label>Stock Quantity <span style="color:#e94560">*</span></label>
-        <input type="number" name="stock_qty" min="0"
-               value="<?= $product['stock_qty'] ?>" required>
+        <input type="number" name="stock" min="0"
+               value="<?= isset($product['stock']) ? $product['stock'] : 100 ?>" required>
       </div>
       <div class="form-group">
-        <label>Product Image</label>
-        <?php if(!empty($product['image'])): ?>
-          <div style="margin-bottom:8px;">
-            <span style="font-size:12px; color:#888;">Current: </span>
-            <span style="font-size:12px; color:#333;"><?= htmlspecialchars($product['image']) ?></span>
-          </div>
-        <?php endif; ?>
-        <input type="file" name="image" accept="image/*">
-        <small style="color:#888; font-size:12px;">Leave blank to keep current image</small>
+        <label>Sizes (comma separated)</label>
+        <input type="text" name="sizes" placeholder="S,M,L,XL"
+               value="<?= htmlspecialchars($product['sizes'] ?? '') ?>">
       </div>
+    </div>
+
+    <div class="form-group">
+      <label>Product Image</label>
+      <?php if(!empty($product['image'])): ?>
+        <div style="margin-bottom:8px;">
+          <span style="font-size:12px; color:#888;">Current: </span>
+          <span style="font-size:12px; color:#333;"><?= htmlspecialchars($product['image']) ?></span>
+        </div>
+      <?php endif; ?>
+      <input type="file" name="image" accept="image/*">
+      <small style="color:#888; font-size:12px;">Leave blank to keep current image</small>
     </div>
 
     <div style="margin-top:8px;">
