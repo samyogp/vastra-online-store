@@ -156,7 +156,7 @@
     </div>
     <div class="about-stats">
       <div class="stat-box">
-        <h3>6+</h3>
+        <h3>30+</h3>
         <p>Products Available</p>
       </div>
       <div class="stat-box">

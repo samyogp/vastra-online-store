@@ -3,7 +3,7 @@ session_start();
 include 'config/db.php';
 
 // Fetch featured products from DB
-$result = mysqli_query($conn, "SELECT p.*, c.category_name FROM products p JOIN categories c ON p.category_id = c.category_id LIMIT 10");
+$result = mysqli_query($conn, "SELECT p.*, c.category_name FROM products p JOIN categories c ON p.category_id = c.category_id LIMIT 30");
 ?>
 <!DOCTYPE html>
 <html lang="en">
