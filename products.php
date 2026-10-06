@@ -184,6 +184,7 @@ $cat_result = mysqli_query($conn, "SELECT * FROM categories");
       text-align:center; transition:background 0.2s;
     }
     .add-cart-btn:hover { background:#e94560; }
+    .add-cart-btn[style] { color: #fff; } 
 
     /* EMPTY STATE */
     .empty-state {
@@ -324,7 +325,12 @@ $cat_result = mysqli_query($conn, "SELECT * FROM categories");
         <div class="product-info">
           <h4><?= htmlspecialchars($row['product_name']) ?></h4>
           <div class="price">Rs. <?= number_format($row['price'], 0) ?></div>
-          <a href="cart.php?add=<?= $row['product_id'] ?>" class="add-cart-btn">🛒 Add to Cart</a>
+          <?php $stock = isset($row['stock']) ? (int)$row['stock'] : 99; ?>
+<?php if($stock > 0): ?>
+  <a href="cart.php?add=<?= $row['product_id'] ?>" class="add-cart-btn">🛒 Add to Cart</a>
+<?php else: ?>
+  <span class="add-cart-btn" style="background:#999; cursor:not-allowed; pointer-events:none;">❌ Out of Stock</span>
+<?php endif; ?>
         </div>
       </div>
       <?php endwhile; ?>
